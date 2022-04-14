@@ -4,4 +4,5 @@ const api = axios.create({
   baseURL: 'https://rickandmortyapi.com/api/',
 });
 
-export const getAllCharacters = () => api.get('character');
+export const getAllCharacters = (page) =>
+  api.get('character', { params: { page } });

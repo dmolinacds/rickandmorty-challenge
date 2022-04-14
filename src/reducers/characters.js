@@ -4,13 +4,14 @@ import { getAllCharacters } from '../api/rickAndMortyApi';
 const initialState = {
   pending: false,
   characters: [],
+  pagination: {},
 };
 
 export const fetchCharacters = createAsyncThunk(
   'characters/fetchCharacters',
   async (page, { rejectWithValue }) => {
     try {
-      const response = await getAllCharacters();
+      const response = await getAllCharacters(page);
       return response.data;
     } catch (e) {
       return rejectWithValue(e.response.data.error);
@@ -31,7 +32,8 @@ export const charactersSlice = createSlice({
       .addCase(fetchCharacters.fulfilled, (state, action) => {
         state.error = null;
         state.pending = false;
-        state.characters = action.payload?.results;
+        state.characters = [...state.characters, ...action.payload?.results];
+        state.pagination = action.payload?.info;
       })
       .addCase(fetchCharacters.rejected, (state, action) => {
         state.error = action.payload;
@@ -43,5 +45,6 @@ export const charactersSlice = createSlice({
 export const selectCharactersError = (state) => state.characters.error;
 export const selectCharactersPending = (state) => state.characters.pending;
 export const selectCharacters = (state) => state.characters.characters;
+export const selectCharactersPagination = (state) => state.characters.pagination;
 
 export default charactersSlice.reducer;
