@@ -6,3 +6,6 @@ const api = axios.create({
 
 export const getAllCharacters = (page) =>
   api.get('character', { params: { page } });
+
+export const getCharacter = (id) =>
+  api.get(`character/${id}`);
